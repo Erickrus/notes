@@ -65,7 +65,8 @@ However, the association law works, e.g.
 ![](http://latex.codecogs.com/gif.latex?(q_{1}q_{2})q_{3}=q_{1}(q_{2}q_{3}))
 
 **Some jargons:**
-![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk), here:
+
+![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk=(a,b,c,d)), here:
 
 ![](http://latex.codecogs.com/gif.latex?a) is called the scalar part
 
