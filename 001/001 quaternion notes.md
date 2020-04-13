@@ -1,7 +1,9 @@
 # Quaternion notes
 The tutorial is given by Mathoma, based on a series of youtube [videos](https://www.youtube.com/watch?v=3Ki14CsP_9k): 
 
-01 Quaternions Explained Briefly
+## 01 Quaternions Explained Briefly
+
+**Introduction:**
 
 2 dimensional vector ![](http://latex.codecogs.com/gif.latex?\vec{F}=(2,1)) in ![](http://latex.codecogs.com/gif.latex?\mathbb{R}^2) space as illustrate in the below diagram: 
 
@@ -12,9 +14,9 @@ Quaternion is 4 dimensional vector in ![](http://latex.codecogs.com/gif.latex?\m
 The force can also be represented in this way
 ![](http://latex.codecogs.com/gif.latex?\vec{F}=(2N)\hat{x}+(1N)\hat{y})
 
-![](http://latex.codecogs.com/gif.latex?q=(1,2,3,4)) can be expressed the equivalent way as the 2D Force ![](http://latex.codecogs.com/gif.latex?1+2i+3j+4k)
+Assume: ![](http://latex.codecogs.com/gif.latex?q=(1,2,3,4)) can be expressed the equivalent way as the 2D Force ![](http://latex.codecogs.com/gif.latex?1+2i+3j+4k)
 
-Addition:
+**Addition:**
 
 The similar as 2D vector:
 
@@ -22,9 +24,13 @@ The similar as 2D vector:
 
 If ![](http://latex.codecogs.com/gif.latex?\vec{F}=(2,1)) and ![](http://latex.codecogs.com/gif.latex?\vec{G}=(0,1)) then ![](http://latex.codecogs.com/gif.latex?\vec{F}+\vec{G}=(2,2))
 
-Multiplication:
+PS: From this formula, you can find the geometric meaning of the vector/quaternion addition
 
-The most famous equation by Hamilton, the great Irish mathematician ![](http://latex.codecogs.com/gif.latex?i^2=j^2=k^2=ijk=-1)
+**Multiplication:**
+
+The most famous equation was discovered by William Rowan Hamilton, the great Irish mathematician ![](http://latex.codecogs.com/gif.latex?i^2=j^2=k^2=ijk=-1)
+
+![](https://github.com/Erickrus/notes/blob/master/001/004.png)
 
 given ![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk) and ![](http://latex.codecogs.com/gif.latex?q_2=e+fi+gj+hk)
 
@@ -54,7 +60,7 @@ Finally it can be further simplified in to:
 
 ![](http://latex.codecogs.com/gif.latex?ah+bg-cf+de)
 
-In general, ![](http://latex.codecogs.com/gif.latex?q_{1}q_{2}\neqq_{2}q_{1})
+In general, communicative law doesn't work, ![](http://latex.codecogs.com/gif.latex?q_{1}q_{2}\neq%20q_{2}q_{1})
 
 However, the association law works, e.g. 
 
@@ -64,12 +70,12 @@ Some jargons:
 ![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk), here ![](http://latex.codecogs.com/gif.latex?a) is called the scalar, ![](http://latex.codecogs.com/gif.latex?(b,c,d)) is called vector
 
 
-02 Quaternions as 4x4 Matrices
+## 02 Quaternions as 4x4 Matrices
 
-03 Quaternions Extracting the Dot and Cross Products
+## 03 Quaternions Extracting the Dot and Cross Products
 
-04 3D Rotations and Quaternion Exponential (Special Case)
+## 04 3D Rotations and Quaternion Exponential (Special Case)
 
-05 3D Rotations in General Rodrigues Rotation Formula and Quaternion Exponentials
+## 05 3D Rotations in General Rodrigues Rotation Formula and Quaternion Exponentials
 
-06 3D Reflections with Vectors and Quaternions
+## 06 3D Reflections with Vectors and Quaternions
