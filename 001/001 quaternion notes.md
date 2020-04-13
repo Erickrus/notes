@@ -75,6 +75,41 @@ However, the association law works, e.g.
 
 ## 02 Quaternions as 4x4 Matrices
 
+4x4 real matrices
+
+From previous series, we have: ![](http://latex.codecogs.com/gif.latex?q_{1}\cdot%20q_{2}=(a,b,c,d)\cdot(e,f,g,h)=)
+
+![](http://latex.codecogs.com/gif.latex?%5Cbegin%7Bmatrix%7D%20ae-bf-cg-dh%5C%5C%20be&plus;af-dg&plus;ch%5C%5C%20ce&plus;df&plus;ag-bh%5C%5C%20de-cf&plus;bg&plus;ah%20%5Cend%7Bmatrix%7D%20%3D%20%5Cbegin%7Bbmatrix%7D%20a%20%26%20-b%20%26%20-c%20%26%20-d%20%5C%5C%20b%20%26%20a%20%26%20-d%20%26%20c%20%5C%5C%20c%20%26%20d%20%26%20a%20%26%20-b%20%5C%5C%20d%20%26%20-c%20%26%20b%20%26%20a%20%5C%5C%20%5Cend%7Bbmatrix%7D%20%5Ccdot%20%5Cbegin%7Bbmatrix%7D%20e%20%5C%5C%20f%20%5C%5C%20g%20%5C%5C%20h%20%5C%5C%20%5Cend%7Bbmatrix%7D)
+
+This creates a link between quaternion and matrix algebra
+
+We can think of quaternion as a matrice, where each of entries are given by the template
+
+![](http://latex.codecogs.com/gif.latex?q_%7B1%7D%5Ccdot%20q_%7B2%7D%20%3D%20a+bi+cj+dk%3D%5Cbegin%7Bbmatrix%7D%20a%20%26%20-b%20%26%20-c%20%26%20-d%20%5C%5C%20b%20%26%20a%20%26%20-d%20%26%20c%20%5C%5C%20c%20%26%20d%20%26%20a%20%26%20-b%20%5C%5C%20d%20%26%20-c%20%26%20b%20%26%20a%20%5C%5C%20%5Cend%7Bbmatrix%7D)
+
+
+Take an example:
+
+![](http://latex.codecogs.com/gif.latex?(1,2,3,6)\cdot(0,1,0,0)=)
+
+The template here is:
+
+![](http://latex.codecogs.com/gif.latex?%281%2C2%2C3%2C6%29%3D%5Cbegin%7Bbmatrix%7D%201%20%26%20-2%20%26%20-3%20%26%20-6%20%5C%5C%202%20%26%201%20%26%20-6%20%26%203%20%5C%5C%203%20%26%206%20%26%201%20%26%20-2%20%5C%5C%206%20%26%20-3%20%26%202%20%26%201%20%5C%5C%20%5Cend%7Bbmatrix%7D)
+
+![](http://latex.codecogs.com/gif.latex?%280%2C1%2C0%2C0%29%3D%5Cbegin%7Bbmatrix%7D%200%20%5C%5C%201%20%5C%5C%200%20%5C%5C%200%20%5C%5C%20%5Cend%7Bbmatrix%7D)
+
+So the result is:
+
+![](http://latex.codecogs.com/gif.latex?%5Cbegin%7Bbmatrix%7D%20-2%20%5C%5C%201%20%5C%5C%206%20%5C%5C%203%20%5C%5C%20%5Cend%7Bbmatrix%7D)
+
+If we replace i, j, k with template, then we have:
+
+![](https://github.com/Erickrus/notes/blob/master/001/005.png)
+
+And using this, it is easy to prove: ![](http://latex.codecogs.com/gif.latex?i^2=j^2=k^2=ijk=-1)
+
+
+
 ## 03 Quaternions Extracting the Dot and Cross Products
 
 ## 04 3D Rotations and Quaternion Exponential (Special Case)
