@@ -48,8 +48,6 @@ If we simplify the result using following table:
 
 ![](https://github.com/Erickrus/notes/blob/master/001/003.png)
 
-Note: the multiplication of quaternion is non-communicative
-
 Finally it can be further simplified in to:
 
 ![](http://latex.codecogs.com/gif.latex?ae-bf-cg-dh)
@@ -60,14 +58,18 @@ Finally it can be further simplified in to:
 
 ![](http://latex.codecogs.com/gif.latex?ah+bg-cf+de)
 
-In general, communicative law doesn't work, ![](http://latex.codecogs.com/gif.latex?q_{1}q_{2}\neq%20q_{2}q_{1})
+The multiplication of quaternion is non-communicative. In general, communicative law doesn't work, we have ![](http://latex.codecogs.com/gif.latex?q_{1}q_{2}\neq%20q_{2}q_{1})
 
 However, the association law works, e.g. 
 
 ![](http://latex.codecogs.com/gif.latex?(q_{1}q_{2})q_{3}=q_{1}(q_{2}q_{3}))
 
-Some jargons:
-![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk), here ![](http://latex.codecogs.com/gif.latex?a) is called the scalar, ![](http://latex.codecogs.com/gif.latex?(b,c,d)) is called vector
+**Some jargons:**
+![](http://latex.codecogs.com/gif.latex?q_1=a+bi+cj+dk), here:
+
+![](http://latex.codecogs.com/gif.latex?a) is called the scalar part
+
+![](http://latex.codecogs.com/gif.latex?(b,c,d)) is called vector part
 
 
 ## 02 Quaternions as 4x4 Matrices
