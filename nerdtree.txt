@@ -1,0 +1,6 @@
+install vundle
+  git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  modify ~/.vimrc as described in README.md (Vundle)
+install nerd
+  modify ~/.vimrc add this line:
+  Plugin 'scrooloose/nerdtree'

@@ -1,0 +1,77 @@
+Complete tmux Tutorial
+  https://www.youtube.com/watch?v=Yl7NFenTgIo
+  Alexis Ahmed (alexis@hsploit.com)
+
+Installation
+  sudo apt install -y tmux
+
+  almost every command starts from ctrl-b, that's the essential
+  I guess, it is to show respect to the great key of ctrl-c
+  and it is just before the order of c
+
+start tmux
+  tmux
+panes
+  create a new pane
+    create a new vertical pane
+      ctrl-b %
+        first press ctrl-b, then press %, that is: shift-5
+    create a new horizontal pane
+      first-b "
+        first press ctrl-b, then press ", that is: shift-'
+  move between pane
+    ctrl-b left, right, up, down
+      first press ctrl-b, then press left, right, up, down
+      and this time you will see the cursor changes
+  change pane size
+    ctrl-b alt-up, down, left, right
+      if you dont release the alt- key you can move multiple times
+      this feature cames from tmux 1.8
+windows
+  create a new window
+    ctrl-b c
+      from the bottom you will see the named window
+  statusbar
+    [0] 0:zsh  1:zsh- 2:zsh*
+      * means currently we are in 2nd window (zsh)
+      - stands for previous window
+  switch between windows
+    ctrl-b N
+      use N to denote the window N
+  rename a window
+    ctrl-b ,
+  popup
+    tmux popup
+      create a temp popup window, in the top-front
+      you can only work in this top-front
+sessions
+  (IMPORTANT) This is why tmus *shines*!
+  preserve your session, if a connection drops/ is lost
+
+  create a session
+    tmux new -s docker
+  list session(s)
+    tmux ls
+      0: 3 windows (created Sat Sep 11 17:23:07 2021)
+  rename session
+    tmux rename-session -t 0 git
+  attach to
+    tmux attach -t 0
+      The exact states are preserved, including what's on the screen previously
+      These session will be preserved, until the system reboot!!!
+  detach from
+    ctrl-b d
+      *back* to the normal shell
+      also displayed: [detached (from session 0)]
+      we you runs ps -ef, you can still see 
+      these processes are running in the background
+  kill
+    tmux kill-session -t docker
+  choose-tree
+    tmux choose-tree
+      you can only run inside a tmux session
+      and then you will be able to choose session/panes/windows
+mouse mode
+  tmux set -g mouse on
+    right click menu
+    use mouse to resize panes
