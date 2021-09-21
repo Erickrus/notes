@@ -1,0 +1,249 @@
+Kubernetes Tutorial for Beginners [FULL COURSE in 4 Hours]
+Janashia Nana
+
+Nana's Kubernetes tutorial
+Intro to K8s
+  What is Kubernetes?
+    What is K8s?
+      Open source container orchestration tool
+      Developed by google
+      Helps you manage containerized applications
+      in different deployment environments
+        physical/virtual/cloud/or even hybrid
+    What problems does Kubernetes solve?
+    What are the task orchestration ?
+    The need for a container orchestration tool
+      Trend from Monolith to Microservies
+      Increased usage of containers
+      Demands for 
+    What features do orchestration tools offer?
+      High Availablility or no downtime
+      Scalability or high performance
+      Diaster recovery - backup
+  K8s Architecture
+  Main K8s Components
+    overview of kubernetes components; tons of components available; begin with a simple javascript 
+
+    Worker Node/Node
+      Node is more often in kubernetes to refer to a worker node
+    Pod [pod]
+      smallest units of k8s
+      abstraction over container
+      Usually 1 application per Pod
+        Of course it is possible to run multiple applications
+        But not recommended
+      Each Pod gets its own IP address
+        Pods can communicate with each other with this internal IP address
+      Pods are ephemeral
+        means they can die very quickly, sometimes, just crash inside the container. So, it is dead. You cannot expect a pod to run for a very long time. New one will be created and replace the origin one.
+      You only interact with the Kubernetes layer
+    Service [svc]
+      permanent/static IP address
+        can be attached to each pod
+      lifecycle of Pod and service NOT connected
+        even if the Pod dies, the service still stay
+        you dont have to worry about the service
+        no need to change for the end point
+    External Service and Internal Sercice
+      External Service
+        service could be open from external
+        url of the external service
+          test: http://124.89.101.2:8080
+          prod: https://my-app.com
+      Internal Service
+        not open to public
+        for example the DB service
+    Ingress [ing]
+      request goes to Ingress, the forwarding to the service
+      this helps to setup the https://my-app.com
+    ConfigMap and Secret
+      ConfigMap [cm]
+        Problem
+          Database URL usually in the built application!
+            rebuild the application
+            to address this kind of hard coding issue
+        external condiguration of your application
+          url, port etc
+          you can put DB_URL=mongo-db
+      Secret [secret]
+        Problem
+          It could be insecure to put the username and password in the configuration file
+        used to store secret data
+          mongo-user, mongo-pwd, credential
+        base64 encoded
+        The built-in security mechanism is not enabled by default!
+        Or use it as environment variables or as a properties file
+    Volumes [vol]
+      Data Storage
+      Attach storage on local machine or remote, outside of the K8s cluster
+      K8s doest manager data persistance
+        Which means you as an user or admin, are responsible for all the data storage, backup, etc
+    Deployment and Stateful Set(sts)
+      These 2 parts are the pod blueprints
+      Service
+        Problem
+          replicating everything on multiple nodes
+          my-app could be in 2 or more places
+        Service has 2 functionalities
+          permanent IP
+          load blancer
+        Deploy for stateLESS Apps
+      Deployment [deploy]
+        define blueprints for pods
+          how many replicas
+          blueprint for my-app pods
+        you create Deployments
+          specify replicas, or scale up/down replicas
+        abstraction of Pods
+        In practically, you will be working more with Deployments rather than Pods
+      StatefulSet [sts]
+        Problem
+          cannot simply replicate database Pods, because database has states. The instance will access the shared database. Need some mechanism to avoid data inconsistencies of writing.
+        Use STATEFUL apps to address above problem
+          MySQL, MongoDB, Elastic Search, etc should be created as stateFUL
+        StatefulSet for stateFUL Apps or Databases
+        Make sure database reads and writes are synchronized, so that no database inconsistency are offered
+        BTW, deploying statefulSet are not easy, somewhat tedious, more difficult than stateless app
+        DB are often hosted outside of K8s cluster
+
+K8s Architecture explained
+  Worker Node [node]
+    Worker Nodes do the actual work
+    Worker machine in K8s cluster
+      each Node has multiple Pods on it
+      3 processes must be installed on each Node
+        Conainer runtime
+        Kubelet
+          interacts with both the container and node
+          starts the pod with a container inside
+          pods communication via Services
+        Kube Proxy
+          forwards the requests
+            intelligent forwarding logic
+  Master Node [master]
+    Question
+      So, how do you interact with this cluster?
+        How to:
+          schedule pod?
+          monitor ?
+          re-schedule/re-start pod?
+          join a new Node?
+      Managing processes are done by Master Node(s)
+    Master processes
+      Api Server
+        client interact with the cluster e.g.
+          kubenetes dashboard
+          kubectl
+          kubenetes api
+        cluster gateway
+          Update/Query
+        acts as a gatekeeper for authentication
+          validates request
+          forward to other component, finally to Pod
+          1 entry better security
+      scheduler
+        schedule new Pod
+        Where to put the Pod?
+          looking for node, with the resouces
+        just decides on which new Pod should be scheduled
+          actually starts the Pod Container is the Kubelet
+      controller manager
+        detects cluster state changes
+          crash/ pods dies
+        let scheduler to communicate and restart the pods
+      etcd
+        a key-value store of the cluster data
+        cluster brain
+        cluster changes get stored in the key value store
+        Application data is NOT stored in etcd
+    multi-master setup
+      2 master nodes
+      each node has 4 processes
+      API server is load-balanced
+      etcd
+        Distributed storage across all master nodes
+      Example Cluster Set-Up
+        a very small cluster
+          2 Master Nodes
+            resources, cup, ram, storage
+          3 Worker Nodes
+            more resoures
+        robust cluster
+          3 Master Nodes
+          6 Worker Nodes
+        Add new Master/Node server
+          1) get new bare server
+          2) install all the master/worker node processes
+          3) add it to the cluster
+
+Minikube and Kubectl - Local Setup
+  Minikube
+    What is minikube?
+      Problem
+        Production Cluster Setup
+          Multiple Master and Worker nodes
+          Separate virtual or physical machines
+        It is impossible/difficult to setup the environment on your local machine because of the resources
+      Master and Node processes run on ONE machine
+        Node will have docker pre-installed
+    Minikube
+      creates Virtual Box on your laptop
+      Node runs in that Virtual Box
+      1 Node K8s cluster
+      for testing purposes - Test/Local Cluster Setup
+  Kubectl
+    What is kubectl?
+      command line tool for kubernetes
+      api server enables interaction with cluster
+      UI, API, CLI: kubectl
+      kubectl is the most powerful of 3 clients
+      enable pods to run on node
+    KUBECTL isnt just for minikube
+      it also works any types of kubenetes cluster, for example cloud cluster
+  Set-up Minikube cluster
+    Demostration install Minikube on mac
+      Installation Guide Links for your OS:
+      minikube
+        https://kubernetes.io/docs/tasks/tools/install-minikube/
+        Virtualization on your machine is needed
+        It's gonna run in a virtualbox setup or hypervisor 
+        Hypervisor, KVM, QEMU, Virtualbox
+      kubectl
+        https://kubernetes.io/docs/tasks/tools/install-kubectl/
+    Installation
+      brew update
+      brew install hyperkit
+      brew install minikube # also install kubectl as dependency
+      kubectl
+      minikube
+      #  start, status, stop, delete, dashboard
+    Create a cluster
+      minikube start --vm-driver=hyperkit
+      kubectl get nodes # get status of nodes
+      minikube status
+      kubectl version # client/server version
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: my-image
+          env:
+            - name: SOME_ENV
+              value: $SOME_ENV
+          ports:
+            - containerPort: 8080
