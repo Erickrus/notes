@@ -1,4 +1,6 @@
 Kubernetes Tutorial for Beginners [FULL COURSE in 4 Hours]
+https://www.youtube.com/watch?v=X48VuDVv0do 
+
 Janashia Nana
 
 Nana's Kubernetes tutorial
@@ -6,7 +8,7 @@ Intro to K8s
   What is Kubernetes?
     What is K8s?
       Open source container orchestration tool
-      Developed by google
+      Developed by Google
       Helps you manage containerized applications
       in different deployment environments
         physical/virtual/cloud/or even hybrid
@@ -211,39 +213,422 @@ Minikube and Kubectl - Local Setup
       kubectl
         https://kubernetes.io/docs/tasks/tools/install-kubectl/
     Installation
+      '''shell
       brew update
       brew install hyperkit
       brew install minikube # also install kubectl as dependency
       kubectl
       minikube
       #  start, status, stop, delete, dashboard
+      '''
     Create a cluster
+      '''shell
       minikube start --vm-driver=hyperkit
       kubectl get nodes # get status of nodes
       minikube status
       kubectl version # client/server version
+      '''
 
+resume at 44:54
+Basic K8s Commands
+Main Kubectl Commands - K8s cli
+  Get status of different component
+    Check node
+      kubectl get nodes
+      NAME,STATUS,ROLES,AGE,VERSION
+    Check pod
+      kubectl get pod
+      No resources found in default namespace.
+    Check services
+      kubectl get services
+      NAME,TYPE,CLUSTER-IP,EXTERNAL-IP,PORTS(S),AGE
+  Create and Edit a Pod
+    Create a Pod
+      check the create command
+        kubectl create -h, to get the help
+        Pod is the smallest unit. User cannot work with Pods directly, 
+        BUT, user are creating ...
+        Deployment - abstraction over Pods
+      Create deployment
+        commands:
+          kubectl create deployment NAME --image=image [--dry-run] [options]
+          kubectl create deployment nginx-depl --image=nginx
+          kubectl get deployment
+          kubectl get pod
+        explanation
+          blueprint for creating pods
+          most basic configuration for deployment (name and image to use)
+          rest defaults
+        replicaset
+          kubectl get replicaset
+          pod id contains replicaset id 10 chars and with its own id 5 chars
+          pod id: nginx-depl-5c8bf76b5b-vnl2w
+          replicaset id: nginx-depl-5c8bf76b5b
+          Replicaset is managing the replicas of a Pod
+          We never work with replicaset, we are going to work with deployment
+      Layers of Abstraction
+        Deployment manages a ..
+          ReplicaSet manages a ..
+            Pod is an abstraction of ..
+              Container
+        Everything below Deployment is handled by Kubernetes (automatically)
+      Edit Deployment
+        kubectl edit deployment [name]
+      Debug pods
+        Check the detail information of a Pod
+          kubectl describe pod
+        Show the execution log
+          kubectl logs [podId]
+        Enter the pod container running
+          kubectl exec -it mongo-depl-5fd6b7d4b4-zgcv9 -- bin/bash
+      Delete deployment
+        kuberctl delete deployment mongo-depl
+        then list using: kubectl get replicaset
+      Apply configuration file
+        Problem
+          the problem is, once you want to create a deployment, there're quite a lot of parameter, 
+          configuration to put in the command line. That is tedious and easily getting errors.
+          To address this problem, we need use this configuration file
+        Command
+          kubectl apply -f nginx-deployment.yaml
+'''
+# nginx-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  name: nginx-deployment
   labels:
-    app: my-app
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template: # blueprint for the pod
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.16
+        ports:
+        - containerPort: 80
+'''
+          now use: 
+            kuberctl get pod # check the deployed pods
+            kuberctl get deployment # check the deployments
+        Modify
+          you can now modify the yaml file
+          if the deployment exists, apply again means update
+          else (not exist) just create a new one
+          Basically, port, volume and other related command can be setup in this file
+ Summarize of this section:
+   CRUD commands
+     Create deployment:              kubectl create deployment [name]
+     Edit deployment:                kubectl edit deployment [name]
+     Delete deployment:              kubectl delete deployment [name]
+   Status of different K8s components
+     kubectl get nodes | pod | services | replicaset | deployment 
+   Debugging pods
+     Log to console:                 kubectl logs [pod name]
+     Get Interactive Terimal:        kubectl exec -it [pod name] -- bin/bash
+     Get Info about pod:             kubectl describe pod [pod name]
+   Use configuration file for CRUD
+     Apply a configuration file:     kubectl apply -f [file name]
+     Delete with configuration file: kubectl delete -f [file name]
+
+resume at: 01:02:05 
+K8s YAML Configuration File
+  YAML Configuration File in Kubernetes
+    Overview:
+      The 3 parts of configuration file
+        Deployment, Service
+      Connecting Deployments to Service to Pods
+      Demo
+
+
+# nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
 spec:
   replicas: 2
   selector:
-    matchLabels:
-      app: my-app
   template:
-    metadata:
-      labels:
-        app: my-app
-    spec:
-      containers:
-        - name: my-app
-          image: my-image
-          env:
-            - name: SOME_ENV
-              value: $SOME_ENV
-          ports:
-            - containerPort: 8080
+
+# nginx-service.yaml
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+  ports:
+
+    3 PARTS of a K8s configuration file
+      1 Metadata
+      2 Specification
+        Attributes of "spec" are specific to the kind!
+      3 Status
+        Automatically generated by Kubenetes
+        What is the desired status and actual status
+        Basic self-healing mechanism provided by kubernetes
+        Where does K8s get this status data?
+          the information comes from etcd
+          Etcd holds the current status of any K8s component
+    Format of the configuration File
+      human friendly data serialization standard for all programming languages
+      syntax strict indentation
+        one can use yaml online validator to check for the errorA
+          google for: yaml validator: Validate YAML - Online YAML Tools
+          onlineyamltools.com
+        Code Editors also have plugins for YAML syntax validation
+      store the config file with your code
+        or its own git repo
+    Blueprint of Pods (template)
+      Layers of Abstraction
+        Deployment manage Pods
+          RepliaSet manage a ..
+            Pod is an abstraction of ..
+              Container
+      Template
+        also has it's own metadata and spec section
+        applies to Pod
+        blueprint for a Pod (port, name, image)
+    Connecting components (Labels & Selectors & Ports)
+      Labels & Selectors
+        metadata contains labels
+        spec part contains selector
+      Connecting Deployment to Pods
+        any key-value pair for component
+        This label is matched by the selector
+
+apiVersion: apps/v1             │apiVersion: v1
+kind: Deployment                │kind: Service
+metadata:                       │metadata:
+  name: nginx-deployment        │  name: nginx-service
+  labels:                       │spec:
+    app: nginx                  │  selector:
+spec:                           │    app: nginx
+  replicas: 2                   │  ports:
+  selector:                     │    - protocol: TCP
+    matchLabels:                │      port: 80
+      app: nginx                │      targetPort: 8080
+  template:                     │
+    metadata:                   │
+      labels:                   │
+        app: nginx              │
+    spec:                       │
+      containers:               │
+      - name: nginx             │
+        image: nginx:1.16       │
+        ports:                  │
+        - containerPort: 80     │
+        
+    Ports in Service and Pod
+      DB Service => nginx Service => Pod
+              port: 80    targetPort:8080
+    
+    apply them
+      kubectl apply -f nginx-deployment.yaml
+      kubectl apply -f nginx-service.yaml
+    verify
+      kubectl describe service nginx-service
+      Endpoints means the Pod exact ip address of containers
+      kubectl get pod -o wide # get the ip address
+
+    Status automatically generated??
+      kuberctl get deployment nginx-deployment -o yaml # > nginx-deployment-result.yaml
+      You cannot use it directly in the deployment
+      Have to remove/clean up the defaults, generated stuffs and status
+      * hint
+        with this, you can also use it to extract information of the current status
+        various of information here includes creating time, etc
+    delete them
+      kubectl delete -f nginx-deployment.yaml
+      kubectl delete -f nginx-service.yaml
+
+resume at 01:16:16 
+Complete Demo Project
+Hands-On Demo
+  Objective
+    deploy mongoDB, mongo-express
+  Overview of K8s Components
+    2 Deployment / Pod
+    2 Service
+    1 ConfigMap
+    1 Secret
+
+    Internal Service     External Service
+       MongoDB[pod]  <=  Mongo Express[pod] <= browser
+         ConfigMap
+           DB Url   \
+         Secret      \ deployment.yaml
+           DB User --  (Env variables)
+           DB Pwd   
+
+
+  Browser Request FLow throught the K8s components
+
+    Browser => Mongo Express => Mongo Express[pod] => MongoDB => MongoDB[pod]
+             External Service                      Internal Service
+                                               ConfigMap     Secret
+                                                 DB Url        DB User
+                                                               DB Pwd
+
+  Secret
+    Create an Opaque Password
+      echo -n "some value" | base64
+      in the data section, put the name and values there
+
+      # In practice never use opaque mode, because
+      # when you pass these environment variables into container
+      # one can easily hacking these variables
+  
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: mongodb-secret
+      type: Opaque
+      data:
+        mongo-root-username: dXNlcm5hbWU=
+        mongo-root-password: cGFzc3dvcmQ=
+
+    Apply and update secret
+      Before any reference started
+      kubectl apply -f mongo-secret.yaml
+    Use secret
+      - name: ENV_NAME
+        valueFrom:
+          secretKeyRef:
+            name: secretName
+            key: secretKeyName
+
+  ConfigMap
+    Pros:
+      external configuration 
+      centralized
+      other component
+    Sample:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: mongodb-configmap
+      data:
+        database_server: mongodb-service
+        database_url: tcp://mongodb-service:27017
+    Notice
+      you can put the service name here
+      however need modify the kube-proxy mode to ipvs
+      https://stackoverflow.com/questions/56493651/enable-ipvs-mode-in-kube-proxy-on-a-ready-kubernetes-local-cluster
+    
+      Change the mode to: ipvs
+        kubectl edit configmap kube-proxy -n kube-system
+        List the system pod
+          kubectl get po -n kube-system
+        Remove system pod
+          kubectl delete po -n kube-system kube-proxy-[id]
+          choose the namespace: kube-system
+        Check the status
+          kubectl logs -n kube-system kube-proxy-[id] | grep "Using ipvs Proxier"
+  
+  make it an External Service
+    add type: LoadBalancer
+    in the service part, add nodePort as a published port
+    minikube service mongodb-express-service
+
+resume at 01:46:15
+Kubernetes Namespaces explained
+  Overview
+    What is a Namespace?
+    What are the use cases?
+    How Namespaces work and how to use it?
+  What is a Namespace?
+    Organise resources in namespaces
+    Virtual cluster inside a cluster
+  4 Namespaces per Default
+    kubectl get namespace
+    kubenetes-dashboard   only with minikube
+
+    kube-system           Do NOT create or modify in kube-system
+      System processes
+      Master and Kubectl processes
+    kube-public           publicly accessible data
+      A configmap, which contains cluster information
+      kubectl cluster-info
+    kube-node-lease       heartbeats of nodes
+      each node has associated lease object in namespace
+      determines the availability of a node
+    default               resources you create are located here
+  Create namespace
+    kubectl create namespace playground
+  Create a namespace with a configuration file
+    Sample
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: database
+        namespace: playground
+      data:
+        db_url: mysql-service.database
+      At the end mysql-service.database, database is another namespace
+  Why to use Namespaces?
+    Resources grouped in Namespaces
+      Officially should not use for smaller projects <= 10 persons
+      However, it is always good to use namespace
+    Conflicts: Many teams, same application
+    Resource Sharing: Staging and Development
+      re-use those components
+      blue/green deployment, 2 different versions of production
+    Access and Resource Limits on Namespaces
+      Each team can have isolated environment
+      Limit: CPU, RAM, Storage per NS
+  Use Cases when to use Namespaces
+    1. Structure your components
+    2. Avoid conflicts between teams
+    3. Share services between different environment
+    4. Access and Resource Limits on Namespaces Level
+  Characteristics of Namespaces
+    You cant access most resources from another Namespace
+      cannot use or share the configmap, secret
+      can share service
+    Sample
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: mysql-configmap
+      data:
+        db_url: mysql-service.database
+
+      At the end mysql-service.database, database is a namespace
+    Components cant be created within a Namespace
+      live globally in a cluster
+      you cant isolate them
+        e.g. vol or node
+    Change the namespace
+      kubectl api-resources --namespaced=false
+      kubectl api-resources --namespaced=true
+    Create Components in a Namespace
+      By default, components are created in a default NS
+      using namespace option
+        kubectl apply -f xxx.yaml --namespace=playground
+      use it in yaml (prefered)
+        name
+      namespace: playground
+    Change active namespace with kubens
+      Installation
+        brew install kubectx
+        install in ubuntu
+        https://stackoverflow.com/questions/69070582/how-can-i-install-kubectx-on-ubuntu-linux-20-04
+        sudo vi /etc/apt/sources.list
+        sudo apt update
+        sudo apt install -y kubectx
+      Usage
+        kubens playground
+        kubens # list the current namespace
+
+resume at 02:01:56
+Kubernetes Ingress explained
