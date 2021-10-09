@@ -1105,16 +1105,15 @@ body .markdown-body
 </ul>
 <hr />
 <h2 id="outline-for-this-lecture">Outline for This Lecture<a class="headerlink" href="#outline-for-this-lecture" title="Permanent link"></a></h2>
-<ul>
-<li>Motication</li>
-<li>Markov Decision Processes</li>
-<li>Exact Solution Methods<ul>
-<li>Value Iteration</li>
-<li>Policy Iteration</li>
-</ul>
-</li>
-<li>Maximum Entropy Formulation</li>
-</ul>
+<pre><code>* Motication
+* Markov Decision Processes
+* Exact Solution Methods
+    *  Value Iteration
+        * Value Iteration
+        * Q-Value Iteration
+    *  Policy Iteration
+* Maximum Entropy Formulation
+</code></pre>
 <hr />
 <h2 id="a-few-deep-rl-highlights">A Few Deep RL Highlights<a class="headerlink" href="#a-few-deep-rl-highlights" title="Permanent link"></a></h2>
 <ul>
@@ -1122,29 +1121,30 @@ body .markdown-body
 <li>Video games, including Pong, Enduro, Beamrider, Q*bert</li>
 </ul>
 </li>
-<li>2D locomotion (TRPO) [Berkley]</li>
-<li>AlphaGo [Deepmind]<ul>
+<li>2D locomotion (TRPO) [Berkley] - 2014</li>
+<li>AlphaGo [Deepmind] - 2015<ul>
 <li>Tian et al, 2016</li>
 <li>Maddison et al, 2014</li>
 <li>Clark et al, 2015</li>
 </ul>
 </li>
-<li>3D locamotion (TRPO+GAE) [Berkley]<ul>
+<li>3D locamotion (TRPO+GAE) [Berkley] - 2016<ul>
 <li>[Shulman, Moitz, Levine, Jordan, Abbeel, ICLR 2016]</li>
 </ul>
 </li>
-<li>Real Robot Manipulation (GPS) [Berkley]<ul>
+<li>Real Robot Manipulation (GPS) [Berkley] - 2016<ul>
 <li>[Levine<em>, Finn</em>, Darrell, Abbeel, JMLR 2016]</li>
 </ul>
 </li>
-<li>Dota2 (PPO) [OpenAI]<ul>
+<li>Dota2 (PPO) [OpenAI] - 2017<ul>
 <li>OpenAI Dota Bot beat best humans 1:1 (Aug 2018)</li>
 </ul>
 </li>
-<li>DeepMimic [Berkley]</li>
-<li>AlphaStar [Deepmind] 2019</li>
-<li>Rubik's Cube (PPO+DR) [OpenAI]</li>
+<li>DeepMimic [Berkley] - 2018</li>
+<li>AlphaStar [Deepmind] - 2019</li>
+<li>Rubik's Cube (PPO+DR) [OpenAI] - 2019</li>
 </ul>
+<p><img alt="" src="/Users/admin/Documents/notes/DRL/001-001.png" /></p>
 <hr />
 <h2 id="markov-decision-process">Markov Decision Process<a class="headerlink" href="#markov-decision-process" title="Permanent link"></a></h2>
 <ul>
@@ -1152,6 +1152,7 @@ body .markdown-body
 <li>Environment -&gt; Agent (state <span class="arithmatex">\(s_t\)</span>)</li>
 <li>Environment -&gt; Agent (reward <span class="arithmatex">\(r_t\)</span>)</li>
 </ul>
+<p><img alt="" src="/Users/admin/Documents/notes/DRL/001-002.png" /></p>
 <p>This is an iterative process, in next iteration will have <span class="arithmatex">\(t_{t+1}\)</span>, <span class="arithmatex">\(r_{t+1}\)</span>. </p>
 <p>Assumption: agent gets to observe the state</p>
 <p>[Drawing from Sutton and Barto, Reinforcement Learning: An Introduction, 1998]</p>
@@ -1202,11 +1203,14 @@ body .markdown-body
 <ul>
 <li>Start</li>
 <li>Agent - robot</li>
-<li>Rock</li>
-<li>Reward (+1)</li>
+<li>Rock/Cliff</li>
+<li>Reward/Diamond (+1)</li>
 <li>Fire (-1)</li>
 </ul>
-<p><strong>goal</strong>: <span class="arithmatex">\(max_{\pi}E[\sum_{t=0}^H \gamma^t R(S_t,A_t,S_{t+1})|\pi]\)</span></p>
+<p><img alt="" src="/Users/admin/Documents/notes/DRL/001-003.png" /></p>
+<p><strong>Goal</strong>: <span class="arithmatex">\(max_{\pi}E[\sum_{t=0}^H \gamma^t R(S_t,A_t,S_{t+1})|\pi]\)</span></p>
+<p><strong><span class="arithmatex">\(\pi\)</span></strong>: The policy tells you how to do</p>
+<p><img alt="" src="/Users/admin/Documents/notes/DRL/001-004.png" /></p>
 <hr />
 <h2 id="optimal-value-function-v">Optimal Value Function V*<a class="headerlink" href="#optimal-value-function-v" title="Permanent link"></a></h2>
 <p><em>Value intuition which will be foundations of many models we talk later</em></p>
@@ -1381,12 +1385,82 @@ body .markdown-body
 </ul>
 <hr />
 <h2 id="q-values">Q-Values<a class="headerlink" href="#q-values" title="Permanent link"></a></h2>
+<ul>
+<li>Well we've seen value of states, there's another concept which is q-values. This will be important too. They're very related.</li>
+<li>
+<p>It is a part of Value Iteration, it is a variant of original V function</p>
+</li>
+<li>
 <p><span class="arithmatex">\(Q^*(s,a)\)</span> = expected utility starting in <span class="arithmatex">\(s\)</span>, taking action <span class="arithmatex">\(a\)</span>, and (thereafter) acting optimally</p>
+<ul>
+<li>are stated as an action <span class="arithmatex">\(a\)</span>, is the expected discounted some of rewards, if you start in state <span class="arithmatex">\(s\)</span>, take action <span class="arithmatex">\(a\)</span> and thereafter acting optimally</li>
+<li>So, In essentially, it's like a value, but not for a state, but for being a state having committed to specific action of that state</li>
+</ul>
+</li>
+<li>
 <p>Bellman Equation:</p>
-<p><span class="arithmatex">\(Q^*(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*(s', a'))\)</span></p>
+<ul>
+<li><span class="arithmatex">\(Q^*(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*(s', a'))\)</span></li>
+<li>We gonna show the Bellman Equation for q-value also<ul>
+<li><span class="arithmatex">\(Q^*(s,a)\)</span> - What is the optimal q-value for being state <span class="arithmatex">\(s\)</span> of action <span class="arithmatex">\(a\)</span></li>
+<li><span class="arithmatex">\(\sum_{s'}\)</span> - What happens after we commited to the action ? We have transition to the next state <span class="arithmatex">\(s'\)</span></li>
+<li><span class="arithmatex">\(P(s'|s,a)\)</span> - the distribution of next state <span class="arithmatex">\(s'\)</span></li>
+<li><span class="arithmatex">\(R(s,a,s')\)</span> - the reward get for that transition, measure expected reward of immediate transition</li>
+<li><span class="arithmatex">\(\gamma \max_{a'}Q^*(s', a'))\)</span> - measures expected value at the future state <span class="arithmatex">\(s'\)</span>.<ul>
+<li><span class="arithmatex">\(Q^*(s', a')\)</span> really is <span class="arithmatex">\(V^*(s')\)</span>, but now expressed as q-values. <span class="arithmatex">\(V^*(s')\)</span> is the best you can do from state <span class="arithmatex">\(s'\)</span>. This means you need to pick the optimal action <span class="arithmatex">\(a'\)</span> in that state <span class="arithmatex">\(s'\)</span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
 <p>Q-Value Iteration:</p>
-<p><span class="arithmatex">\(Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))\)</span></p>
-<p>resume at 45:30</p>
+<ul>
+<li><span class="arithmatex">\(Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))\)</span></li>
+<li>subscription by <span class="arithmatex">\(k+1\)</span>, and exact the same version, iterating with the Bellman updates</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="q-value-iteration">Q-Value Iteration<a class="headerlink" href="#q-value-iteration" title="Permanent link"></a></h2>
+<ul>
+<li><span class="arithmatex">\(Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))\)</span></li>
+</ul>
+<p>k=100, Noise=0.2, Discount=0.9</p>
+<p><img alt="" src="/Users/admin/Documents/notes/DRL/001-015.png" /></p>
+<ul>
+<li>In the navigation of the block, we can see 4 values, each of the four actions has a different value.  </li>
+</ul>
+<hr />
+<h2 id="policy-evaluation">Policy Evaluation<a class="headerlink" href="#policy-evaluation" title="Permanent link"></a></h2>
+<ul>
+<li>Recall value iteration:</li>
+<li><span class="arithmatex">\(V^*_{k}(s) \leftarrow max_{a}\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma V^*_{k-1}(s'))\)</span></li>
+<li>Policy evaluation for a given <span class="arithmatex">\(\pi(s)\)</span>:</li>
+<li><span class="arithmatex">\(V^{\pi}_{k}(s) \leftarrow \sum_{s'}P(s'|s,\pi(s))(R(s,\pi(s),s')+\gamma V^{\pi}_{k-1}(s'))\)</span><ul>
+<li>How does policy iteration operates? The first step, is policy evaluation.</li>
+<li>Policy evaluation with a fixed policies</li>
+<li>We dont get a max over actions, we gonna fix the policies. Then we can do something similar, the same equation, just no max any more. once we fixed the policy, we can run value iteration for the fixed policy. That's called policy evaluation</li>
+<li>Over time, gives us the values for different number of timestep left for that policy <span class="arithmatex">\(\pi\)</span></li>
+<li>So somebody gives you a policy, you run the policy evaluation sequence of updates</li>
+</ul>
+</li>
+<li>At convergence:</li>
+<li><span class="arithmatex">\(\forall s\)</span> <span class="arithmatex">\(V^{\pi}(s) \leftarrow \sum_{s'}P(s'|s,\pi(s))(R(s,\pi(s),s')+\gamma V^{\pi}(s'))\)</span><ul>
+<li>at convergence, you will find the value for that specific policy for each state for infinitive horizon. This is a special case of value iteration. </li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="exercise-2">Exercise 2<a class="headerlink" href="#exercise-2" title="Permanent link"></a></h2>
+<p>Consider a stochastic policy <span class="arithmatex">\(\pi(a|s)\)</span>, where <span class="arithmatex">\(\pi(a|s)\)</span> is the probability of taking action <span class="arithmatex">\(a\)</span> when in state <span class="arithmatex">\(s\)</span>. Which of the following is the correct update to perform policy evaluation for this stochastic policy?</p>
+<ol>
+<li><span class="arithmatex">\(V^{\pi}_{k+1}(s) \leftarrow max_a \sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))\)</span></li>
+<li><span class="arithmatex">\(V^{\pi}_{k+1}(s) \leftarrow \sum_{s'} \sum_{a} \pi(a|s) P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))\)</span></li>
+<li><span class="arithmatex">\(V^{\pi}_{k+1}(s) \leftarrow \sum_{a} \pi(a|s) max_{s'} P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))\)</span></li>
+</ol>
+<p>resume at 51:15</p>
 <hr />
 <p><a href="https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56">Simple Reinforcement Learning: Q-learning</a></p>
 <h2 id="whats-q">What’s ‘Q’?<a class="headerlink" href="#whats-q" title="Permanent link"></a></h2>

@@ -14,38 +14,44 @@ This lecture is given by [Pieter Abbeel](https://en.wikipedia.org/wiki/Pieter_Ab
 
 ---- ---- ---- ----
 ## Outline for This Lecture
-  * Motication
-  * Markov Decision Processes
-  * Exact Solution Methods
-    *  Value Iteration
-    *  Policy Iteration
-  * Maximum Entropy Formulation
+    * Motication
+    * Markov Decision Processes
+    * Exact Solution Methods
+        *  Value Iteration
+            * Value Iteration
+            * Q-Value Iteration
+        *  Policy Iteration
+    * Maximum Entropy Formulation
 
 ---- ---- ---- ----
 ## A Few Deep RL Highlights
   * Atari (DQN) [Deepmind] - 2013
     * Video games, including Pong, Enduro, Beamrider, Q*bert
-  * 2D locomotion (TRPO) [Berkley]
-  * AlphaGo [Deepmind]
+  * 2D locomotion (TRPO) [Berkley] - 2014
+  * AlphaGo [Deepmind] - 2015
     * Tian et al, 2016
     * Maddison et al, 2014
     * Clark et al, 2015
-  * 3D locamotion (TRPO+GAE) [Berkley]
+  * 3D locamotion (TRPO+GAE) [Berkley] - 2016
     * [Shulman, Moitz, Levine, Jordan, Abbeel, ICLR 2016]
-  * Real Robot Manipulation (GPS) [Berkley]
+  * Real Robot Manipulation (GPS) [Berkley] - 2016
     * [Levine*, Finn*, Darrell, Abbeel, JMLR 2016]
-  * Dota2 (PPO) [OpenAI]
+  * Dota2 (PPO) [OpenAI] - 2017
     * OpenAI Dota Bot beat best humans 1:1 (Aug 2018)
-  * DeepMimic [Berkley]
-  * AlphaStar [Deepmind] 2019
-  * Rubik's Cube (PPO+DR) [OpenAI]
+  * DeepMimic [Berkley] - 2018
+  * AlphaStar [Deepmind] - 2019
+  * Rubik's Cube (PPO+DR) [OpenAI] - 2019
+
+![](001-001.png)
 
 ---- ---- ---- ----
 ## Markov Decision Process
   * Agent -> Environment (action $a_t$)
   * Environment -> Agent (state $s_t$)
   * Environment -> Agent (reward $r_t$)
- 
+
+![](001-002.png)
+
 This is an iterative process, in next iteration will have $t_{t+1}$, $r_{t+1}$. 
 
 Assumption: agent gets to observe the state
@@ -93,11 +99,18 @@ Simple environment
 
 * Start
 * Agent - robot
-* Rock
-* Reward (+1)
+* Rock/Cliff
+* Reward/Diamond (+1)
 * Fire (-1)
 
-**goal**: $max_{\pi}E[\sum_{t=0}^H \gamma^t R(S_t,A_t,S_{t+1})|\pi]$
+
+![](001-003.png)
+
+**Goal**: $max_{\pi}E[\sum_{t=0}^H \gamma^t R(S_t,A_t,S_{t+1})|\pi]$
+
+**$\pi$**: The policy tells you how to do
+
+![](001-004.png)
 
 ---- ---- ---- ----
 ## Optimal Value Function V*
@@ -267,18 +280,66 @@ Note: once you get the reward, the game is over. So you can just get any of 1 or
 
 ---- ---- ---- ----
 ## Q-Values
+* Well we've seen value of states, there's another concept which is q-values. This will be important too. They're very related.
+* It is a part of Value Iteration, it is a variant of original V function
 
-$Q^*(s,a)$ = expected utility starting in $s$, taking action $a$, and (thereafter) acting optimally
+* $Q^*(s,a)$ = expected utility starting in $s$, taking action $a$, and (thereafter) acting optimally
+    * are stated as an action $a$, is the expected discounted some of rewards, if you start in state $s$, take action $a$ and thereafter acting optimally
+    * So, In essentially, it's like a value, but not for a state, but for being a state having committed to specific action of that state
 
-Bellman Equation:
+* Bellman Equation:
+    * $Q^*(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*(s', a'))$
+    * We gonna show the Bellman Equation for q-value also
+        * $Q^*(s,a)$ - What is the optimal q-value for being state $s$ of action $a$
+        * $\sum_{s'}$ - What happens after we commited to the action ? We have transition to the next state $s'$
+        * $P(s'|s,a)$ - the distribution of next state $s'$
+        * $R(s,a,s')$ - the reward get for that transition, measure expected reward of immediate transition
+        * $\gamma \max_{a'}Q^*(s', a'))$ - measures expected value at the future state $s'$.
+            * $Q^*(s', a')$ really is $V^*(s')$, but now expressed as q-values. $V^*(s')$ is the best you can do from state $s'$. This means you need to pick the optimal action $a'$ in that state $s'$
 
-$Q^*(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*(s', a'))$
+* Q-Value Iteration:
+    * $Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))$
+    * subscription by $k+1$, and exact the same version, iterating with the Bellman updates
 
-Q-Value Iteration:
 
-$Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))$
+---- ---- ---- ----
+## Q-Value Iteration
 
-resume at 45:30
+* $Q^*_{k+1}(s,a)=\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma \max_{a'}Q^*_k(s', a'))$
+
+k=100, Noise=0.2, Discount=0.9
+
+![](001-015.png)
+
+* In the navigation of the block, we can see 4 values, each of the four actions has a different value.  
+
+
+---- ---- ---- ----
+## Policy Evaluation
+
+* Recall value iteration:
+* $V^*_{k}(s) \leftarrow max_{a}\sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma V^*_{k-1}(s'))$
+* Policy evaluation for a given $\pi(s)$:
+* $V^{\pi}_{k}(s) \leftarrow \sum_{s'}P(s'|s,\pi(s))(R(s,\pi(s),s')+\gamma V^{\pi}_{k-1}(s'))$
+    * How does policy iteration operates? The first step, is policy evaluation.
+    * Policy evaluation with a fixed policies
+    * We dont get a max over actions, we gonna fix the policies. Then we can do something similar, the same equation, just no max any more. once we fixed the policy, we can run value iteration for the fixed policy. That's called policy evaluation
+    * Over time, gives us the values for different number of timestep left for that policy $\pi$
+    * So somebody gives you a policy, you run the policy evaluation sequence of updates
+* At convergence:
+* $\forall s$ $V^{\pi}(s) \leftarrow \sum_{s'}P(s'|s,\pi(s))(R(s,\pi(s),s')+\gamma V^{\pi}(s'))$
+    * at convergence, you will find the value for that specific policy for each state for infinitive horizon. This is a special case of value iteration. 
+
+---- ---- ---- ----
+## Exercise 2
+
+Consider a stochastic policy $\pi(a|s)$, where $\pi(a|s)$ is the probability of taking action $a$ when in state $s$. Which of the following is the correct update to perform policy evaluation for this stochastic policy?
+
+1. $V^{\pi}_{k+1}(s) \leftarrow max_a \sum_{s'}P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))$
+2. $V^{\pi}_{k+1}(s) \leftarrow \sum_{s'} \sum_{a} \pi(a|s) P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))$
+3. $V^{\pi}_{k+1}(s) \leftarrow \sum_{a} \pi(a|s) max_{s'} P(s'|s,a)(R(s,a,s')+\gamma V^{\pi}_{k}(s'))$
+
+resume at 51:15
 ---- ---- ---- ----
 [Simple Reinforcement Learning: Q-learning](https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56)
 
